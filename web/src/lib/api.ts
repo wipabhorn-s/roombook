@@ -9,6 +9,6 @@ export async function getRooms(): Promise<Room[]> {
   if (!res.ok) {
     throw new Error("Failed to load rooms");
   }
-
-  return z.array(roomSchema).parse(await res.json());
+  const body = await res.json();
+  return z.array(roomSchema).parse(body);
 }
