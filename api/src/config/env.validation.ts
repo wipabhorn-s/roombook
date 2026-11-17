@@ -1,9 +1,10 @@
 import { Logger } from '@nestjs/common';
 import z from 'zod';
 
-const envSchemas = z.object({
+export const envSchemas = z.object({
   // z.coerce = แปลง
   PORT: z.coerce.number().int().max(65535).min(0),
+  DATABASE_URL: z.url(),
 });
 
 export function validate(config: Record<string, any>) {

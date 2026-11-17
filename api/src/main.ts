@@ -1,11 +1,18 @@
 import { NestFactory } from '@nestjs/core'; // NestFactory คือตัวสร้างแอป Nest
 import { AppModule } from './app.module'; // AppModule คือ module หลัก ซึ่ง import module อื่นทั้งหมดไว้
-import { Logger } from '@nestjs/common'; // Logger คือตัวพิมพ์ log ของ Nest (มีสี มีเวลา มีชื่อที่มา)
+import { Logger, ValidationPipe } from '@nestjs/common'; // Logger คือตัวพิมพ์ log ของ Nest (มีสี มีเวลา มีชื่อที่มา)
 
 //bootstrap แปลว่า "สตาร์ทระบบ" เป็นชื่อที่ใช้กันทั่วไป
 async function bootstrap() {
   // NestFactory.create(AppModule) สร้างแอปจาก AppModule ตรงนี้ DI container จะสร้าง instance ของทุก provider และ ConfigModule จะอ่าน .env
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
   // app.listen(...) เปิดเซิร์ฟเวอร์รอรับ request
   // process.env.PORT ?? 3000 ใช้ PORT จาก .env ถ้าไม่มี (null/undefined) ให้ใช้ 3000
   await app.listen(process.env.PORT ?? 3000);

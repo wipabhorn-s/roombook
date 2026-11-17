@@ -4,10 +4,34 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/database/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model Room {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  capacity Int
+  bookings Booking[]
+
+  @@map("rooms")
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  title      String
+  bookerName String   @map("booker_name")
+  startTime  DateTime @map("start_time") @db.Timestamptz(3)
+  endTime    DateTime @map("end_time") @db.Timestamptz(3)
+  roomId     Int      @map("room_id")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  room       Room     @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, startTime])
+  @@map("bookings")
 }
