@@ -1,6 +1,7 @@
 // src/app/page.tsx
 // หน้าแรก "/" ของเว็บ: แสดงรายการห้องและการจองของแต่ละห้อง
 
+import { CreateRoomForm } from "@/components/CreateRoomForm";
 import { getRooms } from "@/lib/api";
 import { formatDateTime, formatTime } from "@/lib/format";
 import { Suspense } from "react";
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <main>
       <h1>RoomBook</h1>
+      <CreateRoomForm />
 
       {/* Suspense = ห่อส่วนที่ต้องรอข้อมูล (จำเป็นเพราะเปิด cacheComponents)
           fallback = สิ่งที่แสดงแทนไปก่อน ระหว่างที่ RoomList ยังโหลดไม่เสร็จ */}
