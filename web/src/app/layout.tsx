@@ -21,9 +21,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // scheme-light = ล็อกให้เบราว์เซอร์ใช้ธีมสว่างเสมอ (ไม่งั้นผู้ใช้ที่เปิดโหมดมืดจะเห็นสีเพี้ยน)
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scheme-light`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      {/* bg-white text-gray-900 = พื้นขาว ตัวหนังสือเทาเข้ม (กำหนดชัดเจน ไม่ขึ้นกับโหมดของเครื่อง) */}
+      <body className="flex min-h-full flex-col bg-white text-gray-900">
+        {children}
+      </body>
     </html>
   );
 }

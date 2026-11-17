@@ -5,6 +5,9 @@
 // 'use client' = ให้ component นี้รันในเบราว์เซอร์ (เพราะฟอร์มต้องโต้ตอบกับผู้ใช้)
 "use client";
 
+import { Field, inputClass } from "@/components/Field";
+import { FormError } from "@/components/FormError";
+import { SubmitButton } from "@/components/SubmitButton";
 import { createRoom } from "@/lib/actions";
 import { createRoomSchema } from "@/lib/schemas";
 import { SubmitEvent, useState } from "react";
@@ -73,34 +76,44 @@ export function CreateRoomForm() {
   return (
     // onSubmit = เมื่อกดส่ง ให้เรียก handleSubmit
     // noValidate = ปิดข้อความเตือนของเบราว์เซอร์ เพื่อให้ข้อความสีแดงของเราแสดงแทน
-    <form onSubmit={handleSubmit} noValidate>
-      <div>
-        {/* htmlFor ของ label ต้องตรงกับ id ของช่องกรอก จึงกดที่ป้ายแล้วเลือกช่องนั้นได้ */}
-        <label htmlFor="room-name">Room name</label>
-        {/* name ต้องตรงกับที่ดึงด้วย data.get("name") ใน handleSubmit */}
-        <input id="room-name" name="name" type="text" />
+    // space-y-4 = เว้นระยะแนวตั้งระหว่างส่วนต่างๆ, rounded-lg border p-4 = ทำเป็นกล่องมีกรอบ
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="space-y-4 rounded-lg border border-gray-200 p-4"
+    >
+      {/* grid-cols-1 = มือถือเรียง 1 คอลัมน์, sm:grid-cols-2 = จอตั้งแต่ขนาดกลางขึ้นไปวางข้างกัน 2 คอลัมน์ */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {/* Field = ป้ายชื่อ + ช่องกรอก (htmlFor ต้องตรงกับ id ของช่องกรอก) */}
+        <Field label="Room name" htmlFor="room-name">
+          {/* name ต้องตรงกับที่ดึงด้วย data.get("name") ใน handleSubmit */}
+          <input
+            id="room-name"
+            name="name"
+            type="text"
+            className={inputClass}
+          />
+        </Field>
+
+        <Field label="Capacity" htmlFor="room-capacity">
+          <input
+            id="room-capacity"
+            name="capacity"
+            type="number"
+            className={inputClass}
+          />
+        </Field>
       </div>
 
-      <div>
-        <label htmlFor="room-capacity">Capacity</label>
-        <input id="room-capacity" name="capacity" type="number" />
-      </div>
+      {/* FormError = ข้อความ error สีแดง (conditional rendering: ถ้า error เป็น null ไม่แสดงอะไร) */}
+      <FormError message={error} />
 
-      {/* Conditional rendering (การแสดงผลตามเงื่อนไข) แบบที่ 1: ใช้ &&
-          รูปแบบ: {เงื่อนไข && <ส่วนที่จะแสดง />}
-          ถ้าเงื่อนไขเป็นจริง (error มีข้อความ) -> แสดง <p> สีแดง
-          ถ้าเงื่อนไขเป็นเท็จ (error เป็น null) -> ไม่แสดงอะไรเลย */}
-      {error && <p className="text-red-600">{error}</p>}
-
-      {/* disabled={pending} = ระหว่างส่ง ปุ่มกดซ้ำไม่ได้ (กันกดส่งหลายรอบ) */}
-      <button type="submit" disabled={pending}>
-        {/* Conditional rendering แบบที่ 2: ใช้ ? :
-            รูปแบบ: {เงื่อนไข ? ส่วนถ้าจริง : ส่วนถ้าเท็จ} (if-else แบบสั้น)
-            กำลังส่ง (pending เป็น true) -> แสดง "Saving..."
-            ไม่ได้ส่ง (pending เป็น false) -> แสดง "Add room"
-            ต่างจาก && ตรงที่ ? : เลือกแสดงได้ "อย่างใดอย่างหนึ่ง" ส่วน && แสดงหรือไม่แสดง */}
-        {pending ? "Saving..." : "Add room"}
-      </button>
+      {/* SubmitButton = ปุ่มส่ง ระหว่างส่ง (pending) จะกดซ้ำไม่ได้และเปลี่ยนเป็น "Saving..." */}
+      <SubmitButton
+        pending={pending}
+        label="Add room"
+        pendingLabel="Saving..."
+      />
     </form>
   );
 }
